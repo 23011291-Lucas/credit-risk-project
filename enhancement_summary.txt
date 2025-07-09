@@ -1,0 +1,3 @@
+  • Duplicates removed: 0
+  • Missing values handled: 0 → 0
+  • Data completeness: 100.0%
