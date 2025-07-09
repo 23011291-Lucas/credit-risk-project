@@ -11,6 +11,12 @@ from sklearn.metrics import accuracy_score, classification_report, confusion_mat
 import warnings
 warnings.filterwarnings('ignore')
 
+<<<<<<< HEAD
+=======
+
+
+# YOUR EXISTING CODE - UNCHANGED
+>>>>>>> 04c715d8cca85ebbc06e7c080eaefa1e45c6d2f7
 df = pd.read_csv('set A corporate_rating.csv')
 print("=" * 60)
 print("YOUR ORIGINAL DATA DISPLAY")
@@ -22,6 +28,8 @@ print(df.isnull().sum())
 
 print("\n" + "🚀 STARTING QUICK ENHANCEMENT")
 print("=" * 60)
+
+
 
 # Step 1: Create a working copy (preserve original)
 enhanced_df = df.copy()
@@ -56,6 +64,144 @@ for column in enhanced_df.columns:
 
 missing_after = enhanced_df.isnull().sum().sum()
 print(f"✓ Missing values after: {missing_after}")
+
+def display_column_options(df):
+    """Display available columns for filtering"""
+    print("\n📋 AVAILABLE COLUMNS IN YOUR DATASET:")
+    print("=" * 60)
+    for i, col in enumerate(df.columns, 1):
+        print(f"  {col}")
+    print("=" * 60)
+    print(f"Total columns: {len(df.columns)}")
+
+def get_columns_to_exclude(df):
+    """Interactive column selection for exclusion by name"""
+    print("\n🎯 COLUMN FILTER SETUP:")
+    print("=" * 40)
+    
+    # Display all columns
+    display_column_options(df)
+    
+    # Option 1: Quick presets
+    print("\n🚀 QUICK FILTER PRESETS:")
+    print("  1. No filter (use all columns)")
+    print("  2. Exclude ID/identifier columns only")
+    print("  3. Custom selection (type column names)")
+    
+    while True:
+        try:
+            choice = input("\nSelect option (1-3): ").strip()
+            
+            if choice == '1':
+                # No exclusions
+                return []
+            
+            elif choice == '2':
+                # Auto-detect and exclude ID columns
+                id_columns = [col for col in df.columns if 
+                            any(keyword in col.lower() for keyword in 
+                                ['id', 'index', 'key', 'code', 'ref', 'seq', 'num', 'company_id', 'entity_id']) and
+                            not any(rating_word in col.lower() for rating_word in ['rating', 'grade', 'score'])]
+                
+                if id_columns:
+                    print(f"✓ Auto-detected ID columns to exclude: {id_columns}")
+                    return id_columns
+                else:
+                    print("✓ No ID columns detected. Using all columns.")
+                    return []
+            
+            elif choice == '3':
+                # Custom selection by column names
+                return get_custom_exclusions_by_name(df)
+            
+            else:
+                print("❌ Invalid choice. Please enter 1, 2, or 3.")
+                
+        except KeyboardInterrupt:
+            print("\n⚠️  Operation cancelled. Using all columns.")
+            return []
+        except Exception as e:
+            print(f"❌ Error: {e}. Please try again.")
+
+def get_custom_exclusions_by_name(df):
+    """Get custom column exclusions by column names"""
+    print("\n📝 CUSTOM COLUMN EXCLUSION (BY NAME):")
+    print("Enter column names to exclude (comma-separated)")
+    print("Example: company_id,registration_code,seq_number")
+    print("Or press Enter to skip exclusions")
+    print("\nTip: Column names are case-sensitive!")
+    
+    while True:
+        try:
+            user_input = input("\nColumn names to exclude: ").strip()
+            
+            if not user_input:
+                # No exclusions
+                return []
+            
+            # Parse input - split by comma and clean up
+            column_names = [name.strip() for name in user_input.split(',')]
+            
+            # Validate column names
+            valid_columns = []
+            invalid_columns = []
+            
+            for col_name in column_names:
+                if col_name in df.columns:
+                    valid_columns.append(col_name)
+                else:
+                    invalid_columns.append(col_name)
+            
+            # Report results
+            if invalid_columns:
+                print(f"⚠️  Invalid column names: {invalid_columns}")
+                print("Available columns:")
+                for col in df.columns:
+                    if any(invalid in col.lower() for invalid in [inv.lower() for inv in invalid_columns]):
+                        print(f"  • {col} (similar to: {[inv for inv in invalid_columns if inv.lower() in col.lower()]})")
+                print("\nDid you mean any of these? Please try again.")
+                continue
+            
+            if valid_columns:
+                print(f"✓ Valid columns to exclude: {valid_columns}")
+                
+                # Confirm selection
+                confirm = input("Confirm exclusions? (y/n): ").strip().lower()
+                if confirm in ['y', 'yes']:
+                    return valid_columns
+                else:
+                    print("Let's try again...")
+                    continue
+            else:
+                print("❌ No valid column names provided.")
+                
+        except KeyboardInterrupt:
+            print("\n⚠️  Operation cancelled. Using all columns.")
+            return []
+        except Exception as e:
+            print(f"❌ Error: {e}. Please try again.")
+
+def apply_column_filter(df, excluded_columns):
+    """Apply column filter to dataframe"""
+    if not excluded_columns:
+        print("✓ No columns excluded. Using all columns.")
+        return df, []
+    
+    # Check if excluded columns exist
+    existing_excluded = [col for col in excluded_columns if col in df.columns]
+    missing_excluded = [col for col in excluded_columns if col not in df.columns]
+    
+    if missing_excluded:
+        print(f"⚠️  Columns not found in dataset: {missing_excluded}")
+    
+    if existing_excluded:
+        filtered_df = df.drop(columns=existing_excluded)
+        print(f"✅ Excluded {len(existing_excluded)} columns: {existing_excluded}")
+        print(f"✓ Filtered dataset shape: {filtered_df.shape}")
+        return filtered_df, existing_excluded
+    else:
+        print("✓ No valid columns to exclude. Using all columns.")
+        return df, []
 
 # Save enhanced dataset
 output_file = "set A corporate_rating_enhanced.csv"
