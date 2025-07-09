@@ -238,11 +238,6 @@ print(f"\n🌳 Decision Tree - Classification Report:")
 print(classification_report(y_test, dt_predictions, zero_division=0))
 
 
-
-
-
-
-
 # Step 10: Save All Results
 print("\n💾 SAVING MACHINE LEARNING RESULTS:")
 print("=" * 40)
@@ -264,9 +259,6 @@ if target_encoder:
 ml_results_file = "ml_predictions_results.csv"
 full_results.to_csv(ml_results_file, index=False)
 print(f"✅ ML predictions saved: {ml_results_file}")
-
-
-
 
 
 print(f"✅ Updated summary report: {report_file}")

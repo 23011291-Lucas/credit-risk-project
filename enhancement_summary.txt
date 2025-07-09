@@ -1,7 +1,5 @@
 CORPORATE RATING ANALYSIS - SUMMARY REPORT
 ==================================================
 
-  • Original dataset shape: (2029, 31)
-  • Duplicates removed: 0
-  • Missing values handled: 0 → 0
-  • Data completeness: 100.0%
+  � Original dataset shape: (2029, 31)
+  � Duplicates removed: 0
