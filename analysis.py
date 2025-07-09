@@ -1,7 +1,5 @@
 import pandas as pd
-<<<<<<< HEAD
 ## first commmit
-=======
 import numpy as np
 from datetime import datetime
 # NEW: Add ML imports
@@ -13,8 +11,6 @@ from sklearn.metrics import accuracy_score, classification_report, confusion_mat
 import warnings
 warnings.filterwarnings('ignore')
 
-# YOUR EXISTING CODE - UNCHANGED
->>>>>>> f02563dbf5df0f71f886847bccba96c24feb963a
 df = pd.read_csv('set A corporate_rating.csv')
 print("=" * 60)
 print("YOUR ORIGINAL DATA DISPLAY")
